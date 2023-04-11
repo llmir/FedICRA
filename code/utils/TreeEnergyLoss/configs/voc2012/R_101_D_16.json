@@ -1,0 +1,156 @@
+{
+    "dataset": "pascal_voc",
+    "method": "fcn_segmentor",
+    "data": {
+      "image_tool": "cv2",
+      "input_mode": "BGR",
+      "num_classes": 21,
+      "data_dir": "/msravcshare/dataset/voc2012",
+      "workers": 16,
+      "annotation": "scribble"
+    },
+   "train": {
+      "loader": "voc2012",
+      "batch_size": 16,
+      "data_transformer": {
+        "size_mode": "fix_size",
+        "input_size": [512, 512],
+        "align_method": "only_pad",
+        "pad_mode": "random"
+      }
+    },
+    "val": {
+      "batch_size": 16,
+      "mode": "ms_test",
+      "scale_search": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0],
+      "data_transformer": {
+        "size_mode": "fix_size",
+        "input_size": [512, 512],
+        "align_method": "only_pad",
+        "pad_mode": "pad_right_down"
+      }
+    },
+    "test": {
+      "batch_size": 16,
+      "mode": "ms_test",
+      "scale_search": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0],
+      "crop_size": [512, 512],
+      "out_dir": "/msravcshare/dataset/seg_result/cityscapes",
+      "data_transformer": {
+        "size_mode": "fix_size",
+        "input_size": [512, 512],
+        "align_method": "only_pad",
+        "pad_mode": "pad_right_down"
+      }
+    },
+    "train_trans": {
+      "trans_seq": ["random_hflip", "random_resize", "random_crop"],
+      "random_brightness": {
+        "ratio": 1.0,
+        "shift_value": 10
+      },
+      "random_hflip": {
+        "ratio": 0.5,
+        "swap_pair": []
+      },
+      "random_resize": {
+        "ratio": 1.0,
+        "method": "random",
+        "scale_range": [0.5, 2.0],
+        "aspect_range": [0.9, 1.1]
+      },
+      "random_crop":{
+        "ratio": 1.0,
+        "crop_size": [512, 512],
+        "method": "random",
+        "allow_outside_center": false
+      },
+      "resize": {
+        "min_side_length": 512
+      }
+    },
+    "val_trans": {
+      "trans_seq": ["resize"],
+      "resize": {
+        "target_size": [512, 512]
+      }
+    },
+    "normalize": {
+      "div_value": 255.0,
+      "mean_value": [0.485, 0.456, 0.406],
+      "mean": [0.485, 0.456, 0.406],
+      "std": [0.229, 0.224, 0.225]
+    },
+    "checkpoints": {
+      "checkpoints_name": "fs_basenet_voc2012_seg",
+      "checkpoints_dir": "./checkpoints/voc2012",
+      "save_iters": 1000
+    },
+    "network":{
+      "business_channel_num": 512,
+      "embed_channel_num": 256,
+      "block_channel_nums": [256, 512, 1024, 2048],
+      "tree_filter_group_num": 16,
+      "backbone": "deepbase_resnet101_dilated8",
+      "multi_grid": [1, 1, 1],
+      "model_name": "base_ocnet",
+      "bn_type": "torchsyncbn",
+      "stride": 8,
+      "factors": [[8, 8]],
+      "loss_weights": {
+        "corr_loss": 0.01,
+        "aux_loss": 0.4,
+        "seg_loss": 1.0
+      }
+    },
+    "logging": {
+      "logfile_level": "info",
+      "stdout_level": "info",
+      "log_file": "./log/cityscapes/fs_baseocnet_cityscapes_seg.log",
+      "log_format": "%(asctime)s %(levelname)-7s %(message)s",
+      "rewrite": true
+    },
+    "lr": {
+      "base_lr": 0.001,
+      "metric": "iters",
+      "lr_policy": "lambda_poly",
+      "step": {
+        "gamma": 0.5,
+        "step_size": 100
+      }
+    },
+    "solver": {
+      "display_iter": 100,
+      "test_interval": 500,
+      "max_iters": 40000
+    },
+    "optim": {
+      "optim_method": "sgd",
+      "adam": {
+        "betas": [0.9, 0.999],
+        "eps": 1e-08,
+        "weight_decay": 0.0001
+      },
+      "sgd": {
+        "weight_decay": 0.0001,
+        "momentum": 0.9,
+        "nesterov": false
+      }
+    },
+    "loss": {
+      "loss_type": "fs_auxce_loss",
+      "params": {
+        "ce_reduction": "mean",
+        "ce_ignore_index": -1,
+        "ohem_minkeep": 100000,
+        "ohem_thresh": 0.9
+      }
+    },
+    "tree_loss": {
+      "loss_type": "tree_loss",
+      "params": {
+        "weight": 0.4,
+        "enable_high_level": true
+      }
+    }
+}
