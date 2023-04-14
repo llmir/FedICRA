@@ -17,6 +17,7 @@ Examples of the image and the corresponding sparse annotation from each site.
 # Requirements
 Some important required packages are lised below:
 * Pytorch 1.10.2
+* cudatoolkit 11.3.1
 * efficientnet-pytorch 0.7.1
 * tensorboardx 2.5.1
 * medpy 0.4.0
