@@ -48,7 +48,7 @@ python flower_runner.py --port 8097 --procedure flower_pCE_2D_GateCRFMsacleTreeE
 
 ## 5. Test the model
 ``` bash
-python -u test.py --client client0 --num_classes 2 --in_chns 1 --root_path ../test/ --img_class faz --exp faz/FedICRA_Model/ --min_num_clients 5 --cid 0 --model unet_lc_multihead
+python -u test.py --client client0 --num_classes 2 --in_chns 1 --root_path ../test/ --img_class faz --exp faz/ --min_num_clients 5 --cid 0 --model unet_lc_multihead
 ```
 
 # Acknowledgement
