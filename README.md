@@ -28,7 +28,7 @@ Some important required packages are lised below:
 # Usage
 ## 1. Clone this project
 ``` bash
-git clone https://github.com/miccai2418/FedICRA
+git clone https://github.com/llmir/FedICRA.git
 cd FedICRA
 ```
 
