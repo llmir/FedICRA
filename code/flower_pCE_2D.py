@@ -133,7 +133,7 @@ class MyClient(BaseClient):
                         with torch.no_grad():
                             _heatmaps = self.model(volume_batch, other_client)[-1]
                             # print(heatmaps[-1].shape, _heatmaps[-1].shape)
-                            loss_lc += mse_loss(heatmaps[-1], _heatmaps[-1].detach())
+                        loss_lc += mse_loss(heatmaps[-1], _heatmaps[-1].detach())
                             # loss_lc += mse_loss(heatmaps[-1], _heatmaps[-1])
                     loss_lc = -loss_lc / (self.args.min_num_clients - 1)
                     loss = torch.add(loss, loss_lc, alpha=self.args.alpha)
